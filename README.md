@@ -31,8 +31,8 @@ Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ede
 
 1. **Repoyu Klonlayın:**
    ```bash
-   git clone <repository-url>
-   cd <repository-name>
+   git clone https://github.com/haakanergun/teknasyon_spamguard.git
+   cd teknasyon_spamguard
    ```
 
 2. **Sanal Ortam Oluşturun (Önerilir):**
@@ -91,12 +91,9 @@ Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ede
 ├── datasets/
 │   └── sms_spam_train.csv
 ├── notebooks/
-│   └── SMS_Spam_Detection.ipynb
+│   └── tfidf_classification.ipynb
 ├── outputs/
-│   ├── model_comparison_results.csv
-│   └── feature_importance.png
-├── instance/
-│   └── config.py
+│   └── tfidf_classification.html
 ├── assets/
 │   └── screenshots/
 ├── logs.log
@@ -120,14 +117,10 @@ Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ede
   - `sms_spam_train.csv`: SMS spam veri seti
 
 - **`notebooks/`**: Jupyter notebook'ları
-  - `SMS_Spam_Detection.ipynb`: Model geliştirme ve analiz notebook'u
+  - `tfidf_classification.ipynb`: TF-IDF ve sınıflandırma model geliştirme notebook'u
 
-- **`outputs/`**: Model değerlendirme sonuçları ve grafikler
-  - `model_comparison_results.csv`: Model karşılaştırma sonuçları
-  - `feature_importance.png`: Özellik önem grafikleri
-
-- **`instance/`**: Uygulama konfigürasyon dosyaları
-  - `config.py`: Özel konfigürasyon ayarları
+- **`outputs/`**: Model çıktıları ve raporlar
+  - `tfidf_classification.html`: Model geliştirme ve analiz raporu
 
 - **`assets/`**: Proje görselleri ve dökümantasyon kaynakları
   - `screenshots/`: Uygulama ekran görüntüleri
@@ -227,7 +220,3 @@ Uygulama, temiz kod prensiplerine uygun, modüler yapı ve açıklayıcı kod yo
 
 ### Performans İyileştirmeleri:
 Önbellekleme, lazy loading ve optimize edilmiş animasyonlar kullanılarak uygulamanın performansı artırıldı.
-
-## Lisans
-
-Bu proje MIT Lisansı kapsamında lisanslanmıştır - detaylar için LICENSE dosyasına bakınız.
