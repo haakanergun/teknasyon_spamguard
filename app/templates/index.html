@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpamGuard - SMS Security Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --iphone-width: 375px;
+            --iphone-height: 812px;
+            --status-bar-height: 44px;
+            --nav-height: 44px;
+            --avatar-size: 45px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .iphone {
+            width: var(--iphone-width);
+            height: var(--iphone-height);
+            background: #fff;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0,0,0,0.3);
+        }
+
+        .status-bar {
+            height: var(--status-bar-height);
+            background: #f7f7f7;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .status-icons {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #000;
+        }
+
+        .carrier-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-right: 4px;
+        }
+
+        .carrier-name {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .cellular-icon {
+            display: inline-block;
+            position: relative;
+            width: 18px;
+            height: 12px;
+        }
+
+        .cellular-bar {
+            position: absolute;
+            bottom: 0;
+            width: 3px;
+            background-color: #000;
+            border-radius: 1px;
+        }
+
+        .cellular-bar:nth-child(1) { height: 4px; left: 0; }
+        .cellular-bar:nth-child(2) { height: 6px; left: 4px; }
+        .cellular-bar:nth-child(3) { height: 8px; left: 8px; }
+        .cellular-bar:nth-child(4) { height: 10px; left: 12px; }
+
+        .battery-icon {
+            width: 24px;
+            height: 12px;
+            border: 2px solid #000;
+            border-radius: 3px;
+            padding: 1px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .battery-level {
+            height: 100%;
+            width: 60%;
+            background-color: #000;
+            border-radius: 1px;
+        }
+
+        .battery-tip {
+            position: absolute;
+            right: -4px;
+            top: 4px;
+            width: 2px;
+            height: 4px;
+            background-color: #000;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .nav-bar {
+            height: var(--nav-height);
+            background: #f7f7f7;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-title {
+            font-size: 30px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .nav-button {
+            color: #007AFF;
+            font-size: 17px;
+            font-weight: 500;
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .content {
+            height: calc(100% - var(--status-bar-height) - var(--nav-height));
+            background: #fff;
+            overflow-y: auto;
+        }
+
+        .message-list {
+            list-style: none;
+        }
+
+        .message-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+
+        .message-item.spam-message {
+            background-color: #fff2f2;
+        }
+
+        .message-item.spam-message .sender-name {
+            color: #ff3b30;
+        }
+
+        .message-item.spam-message .avatar {
+            background-color: #ff3b30 !important;
+        }
+
+        .message-item:active {
+            background-color: #f2f2f2;
+        }
+
+        .avatar {
+            width: var(--avatar-size);
+            height: var(--avatar-size);
+            border-radius: 50%;
+            background: #e0e0e0;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 20px;
+            color: #fff;
+        }
+
+        .message-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+
+        .sender-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #000;
+        }
+
+        .message-time {
+            font-size: 14px;
+            color: #8e8e93;
+            margin-left: 8px;
+        }
+
+        .message-preview {
+            font-size: 15px;
+            color: #8e8e93;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .spam-warning {
+            color: #ff3b30;
+            font-weight: 500;
+            font-size: 13px;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .chevron {
+            color: #c7c7cc;
+            margin-left: 8px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .new-message {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        /* Scrollbar styling */
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: #d1d1d6;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone">
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="status-icons">
+                <div class="carrier-container">
+                    <div class="cellular-icon">
+                        <div class="cellular-bar"></div>
+                        <div class="cellular-bar"></div>
+                        <div class="cellular-bar"></div>
+                        <div class="cellular-bar"></div>
+                    </div>
+                    <span class="carrier-name">TeknasyonCell</span>
+                </div>
+                <div class="battery-icon">
+                    <div class="battery-level"></div>
+                    <div class="battery-tip"></div>
+                </div>
+            </div>
+        </div>
+        <div class="nav-bar">
+            <button class="nav-button">Edit</button>
+            <span class="nav-title">Messages</span>
+            <button class="nav-button" onclick="fetchMessage()">New</button>
+        </div>
+        <div class="content">
+            <ul class="message-list" id="message-container">
+                <li class="message-item loading">
+                    <div style="text-align: center; width: 100%; color: #8e8e93;">
+                        Yeni mesaj için sağ üstteki "New" butonuna tıklayın
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function updateTime() {
+            const timeElement = document.querySelector('.time');
+            const now = new Date();
+            timeElement.textContent = now.toLocaleTimeString('tr-TR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function getInitials(text) {
+            return text.split(' ').map(word => word[0]).join('').toUpperCase();
+        }
+
+        function getRandomColor() {
+            const colors = ['#5856d6', '#ff2d55', '#5ac8fa', '#ff9500', '#34c759', '#007aff'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function formatTime(date) {
+            const now = new Date();
+            const today = now.toDateString();
+            const messageDate = new Date(date);
+            
+            if (messageDate.toDateString() === today) {
+                return messageDate.toLocaleTimeString('tr-TR', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } else {
+                return messageDate.toLocaleDateString('tr-TR', {
+                    day: 'numeric',
+                    month: 'numeric'
+                });
+            }
+        }
+
+        const spamSenderPatterns = [
+            { pattern: /vakifbank|bank|account|hesap/i, name: "VakıfBank" },
+            { pattern: /kampanya|offer|discount|indirim/i, name: "Kampanya Servisi" },
+            { pattern: /prize|win|kazan/i, name: "Prize Alert" },
+            { pattern: /credit|kredi|loan|borc/i, name: "Kredi Servisi" },
+            { pattern: /security|güvenlik|verify/i, name: "Security Alert" },
+            { pattern: /gift|hediye/i, name: "Gift Service" },
+            { pattern: /money|para/i, name: "Money Service" },
+            { pattern: /urgent|acil/i, name: "Urgent Notice" },
+            { pattern: /free|bedava|ücretsiz/i, name: "Free Service" },
+            { pattern: /tebrik|congratulations/i, name: "Notification" }
+        ];
+
+        const normalSenderNames = [
+            "John", "Emma", "David", "Sarah", "Michael",
+            "Lisa", "Alex", "Sophie", "Tom", "Anna",
+            "Chris", "Maria", "James", "Laura", "Daniel",
+            "Ayşe", "Mehmet", "Fatma", "Ali", "Zeynep",
+            "Ahmet", "Elif", "Can", "Deniz", "Ece"
+        ];
+
+        function getSenderNameFromMessage(message, isSpam) {
+            if (isSpam) {
+                // Spam mesajları için içeriğe göre gönderici seç
+                for (const pattern of spamSenderPatterns) {
+                    if (pattern.pattern.test(message)) {
+                        return pattern.name;
+                    }
+                }
+                // Eğer özel bir pattern bulunamazsa
+                return "Notification Service";
+            } else {
+                // Normal mesajlar için kişi isimlerinden rastgele seç
+                // Ancak mesajın ilk kelimesi bir isim gibi görünüyorsa onu kullan
+                const firstWord = message.split(/[\s,.:!?]+/)[0];
+                if (firstWord && firstWord.length > 2 && /^[A-Z][a-zA-Z]*$/.test(firstWord)) {
+                    return firstWord;
+                }
+                return normalSenderNames[Math.floor(Math.random() * normalSenderNames.length)];
+            }
+        }
+
+        function createMessageElement(message, label) {
+            const isSpam = label.toLowerCase() === 'spam';
+            const li = document.createElement('li');
+            li.className = `message-item new-message ${isSpam ? 'spam-message' : ''}`;
+            
+            const senderName = getSenderNameFromMessage(message, isSpam);
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.style.backgroundColor = isSpam ? '#ff3b30' : getRandomColor();
+            avatar.textContent = getInitials(senderName);
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            
+            const header = document.createElement('div');
+            header.className = 'message-header';
+            
+            const name = document.createElement('span');
+            name.className = 'sender-name';
+            name.textContent = senderName;
+            
+            const time = document.createElement('span');
+            time.className = 'message-time';
+            time.textContent = formatTime(new Date());
+            
+            header.appendChild(name);
+            header.appendChild(time);
+            
+            const preview = document.createElement('div');
+            preview.className = 'message-preview';
+            preview.textContent = message;
+            
+            content.appendChild(header);
+            content.appendChild(preview);
+            
+            if (isSpam) {
+                const warning = document.createElement('div');
+                warning.className = 'spam-warning';
+                warning.innerHTML = '<span>⚠️</span> Olası spam mesajı';
+                content.appendChild(warning);
+
+                // Spam mesajları için özel stil
+                li.style.backgroundColor = '#fff2f2';
+                preview.style.color = '#ff3b30';
+            }
+            
+            const chevron = document.createElement('span');
+            chevron.className = 'chevron';
+            chevron.textContent = '›';
+            
+            li.appendChild(avatar);
+            li.appendChild(content);
+            li.appendChild(chevron);
+            
+            return li;
+        }
+
+        async function fetchMessage() {
+            try {
+                const response = await fetch('/get_message');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const container = document.getElementById('message-container');
+                    
+                    if (container.querySelector('.loading')) {
+                        container.innerHTML = '';
+                    }
+                    
+                    const messageElement = createMessageElement(data.message, data.label);
+                    container.insertBefore(messageElement, container.firstChild);
+                    
+                    setTimeout(() => {
+                        messageElement.classList.remove('new-message');
+                    }, 300);
+                }
+            } catch (error) {
+                console.error('Error fetching message:', error);
+            }
+        }
+
+        // Update time every minute
+        setInterval(updateTime, 60000);
+        updateTime();
+    </script>
+</body>
+</html> 

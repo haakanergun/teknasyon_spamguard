@@ -1,0 +1,181 @@
+# SMS Spam Tespiti Uygulaması
+
+Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ederek SMS mesajlarını spam veya ham (spam olmayan) olarak sınıflandırmak için bir makine öğrenmesi modeli kullanır. Projede veri ön işleme, özellik çıkarımı ve PyCaret kullanılarak model geliştirme adımları da yer almaktadır.
+
+---
+
+## Özellikler
+
+- **Modern iPhone Benzeri Arayüz:**  
+  Gerçekçi bir iOS görünümü; durum çubuğu, mesaj listesi ve etkileşimli ögeler.
+
+- **Gerçek Zamanlı SMS Sınıflandırması:**  
+  Eğitilmiş makine öğrenmesi modeli (PyCaret kullanılarak geliştirilen) ve TF-IDF vektörleyici ile gelen SMS mesajları sınıflandırılır.
+
+- **Otomatik Mesaj Güncellemesi:**  
+  Uygulama her 5 dakikada bir önceden tanımlanmış listeden rastgele bir SMS mesajı seçer ve sınıflandırma sonucunu gösterir.
+
+- **Duyarlı Tasarım:**  
+  Tüm cihazlarda uyumlu, mobil cihazlara optimize edilmiş ve retina ekranlar için optimize edilmiş tasarım.
+
+---
+
+## Önkoşullar
+
+- Python 3.8 veya üzeri
+- pip (Python paket yöneticisi)
+
+---
+
+## Kurulum
+
+1. **Repoyu Klonlayın:**
+   ```bash
+   git clone <repository-url>
+   cd <repository-name>
+   ```
+
+2. **Sanal Ortam Oluşturun (Önerilir):**
+   ```bash
+   python -m venv venv
+   ```
+
+3. **Sanal Ortamı Aktif Hale Getirin:**
+   - Windows:
+   ```bash
+   venv\Scripts\activate
+   ```
+   - macOS/Linux:
+   ```bash
+   source venv/bin/activate
+   ```
+
+4. **Gerekli Paketleri Yükleyin:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Uygulamayı Çalıştırma
+
+1. Sanal ortamın aktif olduğundan emin olun.
+
+2. Flask Uygulamasını Başlatın:
+   ```bash
+   python run.py
+   ```
+
+3. Web Tarayıcınızda Aşağıdaki Adrese Gidin:
+   ```
+   http://127.0.0.1:5000
+   ```
+
+## Proje Yapısı
+
+```
+.
+├── app/
+│   ├── __init__.py
+│   ├── routes/
+│   │   ├── __init__.py
+│   │   └── main.py
+│   ├── static/
+│   │   ├── css/
+│   │   └── js/
+│   └── templates/
+│       └── index.html
+├── models/
+│   ├── final_pycaret_model.pkl
+│   └── tfidf_vectorizer.pkl
+├── requirements.txt
+├── README.md
+└── run.py
+```
+
+## Uygulama Nasıl Çalışır?
+
+### Model ve Vektörleyici Yükleme:
+- Uygulama başlatıldığında, önceden eğitilmiş PyCaret sınıflandırma modeli ve TF-IDF vektörleyici yüklenir.
+
+### SMS Mesaj İşleme:
+- Her 5 dakikada bir, uygulama rastgele bir SMS mesajı seçer (geliştirme aşamasında sms_spam_train.csv veri seti de entegre edilmiştir).
+- Seçilen mesaj, ön işleme tabi tutulur, TF-IDF ile özelliklere dönüştürülür ve model tarafından spam veya ham olarak sınıflandırılır.
+
+### Gösterim:
+- Sınıflandırma sonucu, iPhone benzeri arayüzde; spam mesajlar için farklı stiller (örneğin, kırmızı arka plan, uyarı simgesi) kullanılarak gösterilir.
+
+## Model Geliştirme & Veri Ön İşleme
+
+### Veri Ön İşleme ve Keşifsel Veri Analizi (EDA)
+
+#### Keşifsel Veri Analizi (EDA):
+- sms_spam_train.csv veri seti yüklendi; veri boyutu, eksik değerler ve temel istatistikler incelendi.
+- Spam ve ham etiket dağılımı bar grafikleri ile görselleştirildi.
+- Mesaj uzunluğu ve kelime sayısı histogramları ve KDE kullanılarak analiz edildi.
+- Spam ve ham mesajlar için WordCloud'lar oluşturuldu; böylece yaygın kelimeler tespit edildi.
+- Her iki sınıfta da en sık geçen kelimeler analiz edilerek, özellik mühendisliği için yönlendirici bilgiler elde edildi.
+
+#### Metin Ön İşleme:
+- Metinler küçük harfe çevrildi.
+- Özel karakterler ve gereksiz boşluklar temizlendi; Türkçe karakterler korunarak düzenlendi.
+- Tokenizasyon gerçekleştirildi ve hem İngilizce hem Türkçe stop-word'ler kaldırıldı.
+- (Opsiyonel) Stemming veya lemmatization adımları uygulandı.
+
+### Özellik Çıkarımı
+
+#### TF-IDF Vektörleştirme:
+- Ön işlenmiş metin verisi, TF-IDF yöntemi kullanılarak sayısal özelliklere dönüştürüldü.
+- Özellik alanı gürültüyü azaltmak amacıyla sınırlandırıldı (örneğin, max_features=5000).
+- TF-IDF vektörleyici tfidf_vectorizer.pkl dosyası olarak kaydedildi.
+
+### PyCaret ile Model Eğitimi ve Tuning
+
+#### PyCaret Entegrasyonu:
+- setup fonksiyonu kullanılarak deney ortamı oluşturuldu ve veri seti üzerinde farklı modeller karşılaştırıldı (compare_models).
+- En iyi performans gösteren model seçildi ve create_model, tune_model kullanılarak hiperparametre optimizasyonu yapıldı.
+- Son model oluşturuldu ve final_pycaret_model.pkl olarak kaydedildi.
+
+## Backend Geliştirme Detayları
+
+### Flask Uygulama Yapısı:
+- Uygulama, modülerlik için application factory pattern kullanılarak geliştirildi.
+- Blueprint'ler aracılığıyla farklı rotalar organize edildi.
+- Hata yönetimi ve loglama mekanizmaları eklendi.
+
+### API Endpoint'leri:
+- `/`: Ana sayfa render edilir.
+- `/get_message`: Rastgele SMS mesajı seçip, model ile spam/ham sınıflandırması yaparak JSON formatında sonuç döndürür.
+
+### Model Entegrasyonu:
+- Uygulama başlatıldığında, PyCaret modeli ve TF-IDF vektörleyici yüklenir.
+- Gelen SMS mesajları ön işleme tabi tutulur ve vektörleştirilerek model tarafından sınıflandırılır.
+
+## Frontend Geliştirme Detayları
+
+### iPhone Benzeri Arayüz:
+- iOS tasarım prensiplerine uygun, gerçekçi bir arayüz oluşturuldu.
+- SF Pro Text fontu kullanılarak modern bir görünüm sağlandı.
+- Durum çubuğunda gerçek zamanlı saat, sinyal göstergesi, operatör (örn. TeknasyonCell) ve pil seviyesi bulunur.
+
+### Mesaj Listesi:
+- iOS Messages uygulaması tarzında, kaydırılabilir mesaj listesi oluşturuldu.
+- Her mesaj; renkli avatar, gönderici ismi, mesaj önizlemesi, gönderim zamanı ve detay için sağ ok simgesi içerir.
+
+### Spam Mesaj Gösterimi:
+- Spam mesajlar, kırmızı arka plan, uyarı simgesi (⚠️) ve "Olası spam mesajı" etiketi ile görsel olarak vurgulanır.
+
+### Etkileşimler ve Animasyonlar:
+- Yeni gelen mesajlar yumuşak geçiş animasyonları ile ekranda belirir.
+- Dokunma geri bildirimleri ve yumuşak geçiş efektleri sağlanır.
+- Responsive ve retina ekranlara uyumlu tasarım ile tüm cihazlarda modern iOS görünümü elde edilir.
+
+## Geliştirme
+
+### Modüler Kod Organizasyonu:
+Uygulama, temiz kod prensiplerine uygun, modüler yapı ve açıklayıcı kod yorumlarıyla geliştirildi.
+
+### Performans İyileştirmeleri:
+Önbellekleme, lazy loading ve optimize edilmiş animasyonlar kullanılarak uygulamanın performansı artırıldı.
+
+## Lisans
+
+Bu proje MIT Lisansı kapsamında lisanslanmıştır - detaylar için LICENSE dosyasına bakınız.
