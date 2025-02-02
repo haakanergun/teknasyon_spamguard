@@ -80,9 +80,7 @@ Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ede
 │   │   └── main.py
 │   ├── static/
 │   │   ├── css/
-│   │   │   └── style.css
 │   │   └── js/
-│   │       └── main.js
 │   └── templates/
 │       └── index.html
 ├── models/
@@ -121,9 +119,6 @@ Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ede
 
 - **`outputs/`**: Model çıktıları ve raporlar
   - `tfidf_classification.html`: Model geliştirme ve analiz raporu
-
-- **`assets/`**: Proje görselleri ve dökümantasyon kaynakları
-  - `screenshots/`: Uygulama ekran görüntüleri
 
 - **Kök Dizindeki Dosyalar**:
   - `run.py`: Uygulamayı başlatan ana script
