@@ -227,7 +227,3 @@ Uygulama, temiz kod prensiplerine uygun, modüler yapı ve açıklayıcı kod yo
 
 ### Performans İyileştirmeleri:
 Önbellekleme, lazy loading ve optimize edilmiş animasyonlar kullanılarak uygulamanın performansı artırıldı.
-
-## Lisans
-
-Bu proje MIT Lisansı kapsamında lisanslanmıştır - detaylar için LICENSE dosyasına bakınız.
