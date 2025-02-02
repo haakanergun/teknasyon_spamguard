@@ -10,10 +10,10 @@ Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ede
   Gerçekçi bir iOS görünümü; durum çubuğu, mesaj listesi ve etkileşimli ögeler.
 
 - **Gerçek Zamanlı SMS Sınıflandırması:**  
-  Eğitilmiş makine öğrenmesi modeli (PyCaret kullanılarak geliştirilen) ve TF-IDF vektörleyici ile gelen SMS mesajları sınıflandırılır.
+  Eğitilmiş makine öğrenmesi modeli (PyCaret kullanılarak geliştirilen) ve TF-IDF vektörleyici ile gelen SMS mesajları anında sınıflandırılır.
 
-- **Otomatik Mesaj Güncellemesi:**  
-  Uygulama her 5 dakikada bir önceden tanımlanmış listeden rastgele bir SMS mesajı seçer ve sınıflandırma sonucunu gösterir.
+- **İnteraktif Mesaj Kontrolü:**  
+  Kullanıcı arayüzündeki "New" butonu ile yeni mesajlar alınabilir ve her mesaj anında spam analizi yapılarak gösterilir.
 
 - **Duyarlı Tasarım:**  
   Tüm cihazlarda uyumlu, mobil cihazlara optimize edilmiş ve retina ekranlar için optimize edilmiş tasarım.
@@ -80,16 +80,63 @@ Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ede
 │   │   └── main.py
 │   ├── static/
 │   │   ├── css/
+│   │   │   └── style.css
 │   │   └── js/
+│   │       └── main.js
 │   └── templates/
 │       └── index.html
 ├── models/
 │   ├── final_pycaret_model.pkl
 │   └── tfidf_vectorizer.pkl
+├── datasets/
+│   └── sms_spam_train.csv
+├── notebooks/
+│   └── SMS_Spam_Detection.ipynb
+├── outputs/
+│   ├── model_comparison_results.csv
+│   └── feature_importance.png
+├── instance/
+│   └── config.py
+├── assets/
+│   └── screenshots/
+├── logs.log
 ├── requirements.txt
 ├── README.md
 └── run.py
 ```
+
+### Klasör Yapısı Açıklamaları
+
+- **`app/`**: Flask uygulamasının ana dizini
+  - `routes/`: API endpoint'leri ve route tanımlamaları
+  - `static/`: CSS, JavaScript ve diğer statik dosyalar
+  - `templates/`: HTML şablonları
+
+- **`models/`**: Eğitilmiş model ve vektörleyici dosyaları
+  - `final_pycaret_model.pkl`: PyCaret ile eğitilmiş sınıflandırma modeli
+  - `tfidf_vectorizer.pkl`: Eğitilmiş TF-IDF vektörleyici
+
+- **`datasets/`**: Ham ve işlenmiş veri setleri
+  - `sms_spam_train.csv`: SMS spam veri seti
+
+- **`notebooks/`**: Jupyter notebook'ları
+  - `SMS_Spam_Detection.ipynb`: Model geliştirme ve analiz notebook'u
+
+- **`outputs/`**: Model değerlendirme sonuçları ve grafikler
+  - `model_comparison_results.csv`: Model karşılaştırma sonuçları
+  - `feature_importance.png`: Özellik önem grafikleri
+
+- **`instance/`**: Uygulama konfigürasyon dosyaları
+  - `config.py`: Özel konfigürasyon ayarları
+
+- **`assets/`**: Proje görselleri ve dökümantasyon kaynakları
+  - `screenshots/`: Uygulama ekran görüntüleri
+
+- **Kök Dizindeki Dosyalar**:
+  - `run.py`: Uygulamayı başlatan ana script
+  - `requirements.txt`: Proje bağımlılıkları
+  - `logs.log`: Uygulama log dosyası
+  - `README.md`: Proje dökümantasyonu
 
 ## Uygulama Nasıl Çalışır?
 
@@ -97,11 +144,15 @@ Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ede
 - Uygulama başlatıldığında, önceden eğitilmiş PyCaret sınıflandırma modeli ve TF-IDF vektörleyici yüklenir.
 
 ### SMS Mesaj İşleme:
-- Her 5 dakikada bir, uygulama rastgele bir SMS mesajı seçer (geliştirme aşamasında sms_spam_train.csv veri seti de entegre edilmiştir).
-- Seçilen mesaj, ön işleme tabi tutulur, TF-IDF ile özelliklere dönüştürülür ve model tarafından spam veya ham olarak sınıflandırılır.
+- Kullanıcı "New" butonuna tıkladığında, uygulama rastgele bir SMS mesajı seçer.
+- Seçilen mesaj, ön işleme tabi tutulur, TF-IDF ile özelliklere dönüştürülür ve model tarafından anında spam veya ham olarak sınıflandırılır.
+- Sınıflandırma sonucu hemen kullanıcıya gösterilir.
 
 ### Gösterim:
-- Sınıflandırma sonucu, iPhone benzeri arayüzde; spam mesajlar için farklı stiller (örneğin, kırmızı arka plan, uyarı simgesi) kullanılarak gösterilir.
+- Sınıflandırma sonucu, iPhone benzeri arayüzde gösterilir:
+  - Normal mesajlar standart görünümde
+  - Spam mesajlar kırmızı arka plan ve uyarı simgesi (⚠️) ile vurgulanır
+  - Her mesajın üstünde gönderici bilgisi ve zaman gösterilir
 
 ## Model Geliştirme & Veri Ön İşleme
 
@@ -154,7 +205,8 @@ Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ede
 ### iPhone Benzeri Arayüz:
 - iOS tasarım prensiplerine uygun, gerçekçi bir arayüz oluşturuldu.
 - SF Pro Text fontu kullanılarak modern bir görünüm sağlandı.
-- Durum çubuğunda gerçek zamanlı saat, sinyal göstergesi, operatör (örn. TeknasyonCell) ve pil seviyesi bulunur.
+- Durum çubuğunda saat, sinyal göstergesi, operatör adı (TeknasyonCell) ve pil seviyesi bulunur.
+- Üst kısımda "New" butonu ile yeni mesaj alma kontrolü sağlanır.
 
 ### Mesaj Listesi:
 - iOS Messages uygulaması tarzında, kaydırılabilir mesaj listesi oluşturuldu.
