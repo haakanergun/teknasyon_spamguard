@@ -90,6 +90,7 @@ Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ede
 │   └── sms_spam_train.csv
 ├── notebooks/
 │   └── tfidf_classification.ipynb
+│   └── gpt.ipynb
 ├── outputs/
 │   └── tfidf_classification.html
 ├── assets/
@@ -166,12 +167,19 @@ Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ede
 - Özellik alanı gürültüyü azaltmak amacıyla sınırlandırıldı (örneğin, max_features=5000).
 - TF-IDF vektörleyici tfidf_vectorizer.pkl dosyası olarak kaydedildi.
 
-### PyCaret ile Model Eğitimi ve Tuning
+### Model Eğitimi ve Tuning
 
-#### PyCaret Entegrasyonu:
+#### PyCaret ile Model Geliştirme:
 - setup fonksiyonu kullanılarak deney ortamı oluşturuldu ve veri seti üzerinde farklı modeller karşılaştırıldı (compare_models).
 - En iyi performans gösteren model seçildi ve create_model, tune_model kullanılarak hiperparametre optimizasyonu yapıldı.
 - Son model oluşturuldu ve final_pycaret_model.pkl olarak kaydedildi.
+
+### GPT Fine-Tuning ile Model Geliştirme
+- OpenAI’nin GPT fine-tuning yöntemi kullanılarak, SMS spam tespiti görevine özel bir model eğitildi.
+- Eğitim verisi, chat formatında (system, user, assistant mesajları) JSONL formatına dönüştürüldü.
+- JSONL dosyası OpenAI API kullanılarak yüklendi; fine-tuning işine başlandı.
+- Fine-tuning işinde, hiperparametreler (örn. n_epochs=1, batch_size=2) ayarlanarak yaklaşık 50 adımda eğitim gerçekleştirildi.
+- Elde edilen GPT fine-tuned model, SMS mesajlarının sınıflandırılmasında kullanılmaktadır.
 
 ## Backend Geliştirme Detayları
 
