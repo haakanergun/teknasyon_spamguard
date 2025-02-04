@@ -2,6 +2,10 @@
 
 Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ederek SMS mesajlarını spam veya ham (spam olmayan) olarak sınıflandırmak için bir makine öğrenmesi modeli kullanır. Projede veri ön işleme, özellik çıkarımı ve PyCaret kullanılarak model geliştirme adımları da yer almaktadır.
 
+## İş Akışı
+
+![svg drawio](https://github.com/user-attachments/assets/7fdd9b87-7668-4a9a-8060-ccb802b88c5a)
+
 ---
 
 ## Özellikler
