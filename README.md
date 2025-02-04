@@ -71,6 +71,10 @@ Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ede
    ```
    http://127.0.0.1:5000
    ```
+Alternatif Uygulamaya Ulaşım:
+  ```
+   http://37.148.208.129:5001/
+  ```
 
 ## Proje Yapısı
 
