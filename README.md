@@ -18,6 +18,9 @@ Flask tabanlı bir web uygulaması. Bu uygulama, iPhone arayüzünü simüle ede
 - **Duyarlı Tasarım:**  
   Tüm cihazlarda uyumlu, mobil cihazlara optimize edilmiş ve retina ekranlar için optimize edilmiş tasarım.
 
+  ![image](https://github.com/user-attachments/assets/9cb0f181-f574-47b4-96d8-7246cdbd0025)
+
+
 ---
 
 ## Önkoşullar
